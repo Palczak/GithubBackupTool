@@ -7,7 +7,7 @@ using GithubBackupTool.Models;
 using GithubBackupTool.Models.Repositories;
 using Newtonsoft.Json;
 
-namespace GithubBackupTool.Infractructure
+namespace GithubBackupTool.Infrastructure.WebServices
 {
     public class IssueService : IIssueService
     {

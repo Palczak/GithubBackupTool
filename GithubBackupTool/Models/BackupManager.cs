@@ -1,7 +1,6 @@
 ﻿using GithubBackupTool.Infrastructure.Interfaces;
 using GithubBackupTool.Models.Interfaces;
 using GithubBackupTool.Models.Repositories;
-using System.Threading.Tasks;
 
 namespace GithubBackupTool.Models
 {

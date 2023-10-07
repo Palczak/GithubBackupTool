@@ -3,7 +3,7 @@ using System.Net.Http;
 using System;
 using GithubBackupTool.Infrastructure.Interfaces;
 
-namespace GithubBackupTool.Infrastructure
+namespace GithubBackupTool.Infrastructure.WebServices
 {
     public class GithubHttpClient : IGithubHttpClient
     {

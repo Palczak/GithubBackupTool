@@ -2,8 +2,9 @@
 
 namespace GithubBackupTool.Models
 {
-    public class BackupRecord
+    public class Backup
     {
+        public int Id { get; set; }
         public string RepositoryName { get; set; }
         public DateTime BackupUTC { get; set; }
     }

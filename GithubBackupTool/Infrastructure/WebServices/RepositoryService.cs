@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace GithubBackupTool.Infractructure
+namespace GithubBackupTool.Infrastructure.WebServices
 {
     public class RepositoryService : IRepositoryService
     {
@@ -21,7 +21,7 @@ namespace GithubBackupTool.Infractructure
 
         public async Task CreateRepository(string name)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Repository>> GetRepositories()

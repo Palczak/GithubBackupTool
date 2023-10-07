@@ -1,6 +1,7 @@
 ﻿using GithubBackupTool.Infractructure;
 using GithubBackupTool.Infrastructure;
 using GithubBackupTool.Infrastructure.Interfaces;
+using GithubBackupTool.Infrastructure.WebServices;
 using GithubBackupTool.Models;
 using GithubBackupTool.Models.Interfaces;
 using GithubBackupTool.Models.Repositories;
@@ -27,6 +28,7 @@ namespace GithubBackupTool
                     services.AddTransient<IBackupManager, BackupManager>();
                     services.AddTransient<IIssueService, IssueService>();
                     services.AddTransient<IBackupRepository, BackupRepository>();
+                    services.AddTransient<BackupContext>();
                 })
                 .Build();
         }
