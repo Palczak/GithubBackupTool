@@ -1,5 +1,6 @@
 ﻿using GithubBackupTool.Infractructure.Interfaces;
 using GithubBackupTool.Infrastructure.Interfaces;
+using GithubBackupTool.Models.Repositories;
 
 namespace GithubBackupTool.Models
 {
@@ -18,12 +19,12 @@ namespace GithubBackupTool.Models
             _encryptor = encryptor;
         }
 
-        public void CreateBackup(string repositroyName)
+        public void CreateBackup(Repository repository)
         {
-            var issues = _issueService.GetIssues(repositroyName);
+            var issues = _issueService.GetIssues(repository);
             var encryptedIssues = _encryptor.Encrypt(issues);
-            _backupRepository.WriteBackup(encryptedIssues);
-            _backupRepository.CreaceBackupRecord(repositroyName);
+            _backupRepository.SaveBackupToFile(encryptedIssues);
+            _backupRepository.CreateBackupRecord(repository.Name);
         }
 
         public void RestoreBackup()

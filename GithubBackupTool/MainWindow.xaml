@@ -3,10 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GithubBackupTool"
+
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button x:Name="RefreshRepositories" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Click="RefreshRepositories_Click">Refresh repositories</Button>
+        <TextBox x:Name="ErrorTextBox" IsReadOnly="True" Foreground="Red" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ></TextBox>
+        
+        <Label x:Name="BearerLabl" Grid.Row="0" Grid.Column="2" >Bearer token: </Label>
+        <TextBox x:Name="BearerTextBox" Grid.Row="1" Grid.Column="2" TextChanged="BearerTextBox_TextChanged">Placeholder</TextBox>
+        
+        <ListView x:Name="RepositoriesView" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0"></ListView>
     </Grid>
 </Window>
