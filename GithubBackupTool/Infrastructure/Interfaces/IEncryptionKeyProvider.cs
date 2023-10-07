@@ -2,6 +2,8 @@
 {
     public interface IEncryptionKeyProvider
     {
-        public string EncrytpionKey { get; }
+        public byte[] Key { get; }
+
+        public byte[] IV { get; }
     }
 }

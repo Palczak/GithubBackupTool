@@ -1,6 +1,8 @@
 ﻿using GithubBackupTool.Infractructure;
 using GithubBackupTool.Infrastructure;
 using GithubBackupTool.Infrastructure.Interfaces;
+using GithubBackupTool.Models;
+using GithubBackupTool.Models.Interfaces;
 using GithubBackupTool.Models.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,10 +17,16 @@ namespace GithubBackupTool
         public App()
         {
             AppHost = Host.CreateDefaultBuilder()
-                .ConfigureServices((hostContext, services) => {
+                .ConfigureServices((hostContext, services) =>
+                {
                     services.AddSingleton<MainWindow>();
                     services.AddTransient<IRepositoryService, RepositoryService>();
                     services.AddSingleton<IGithubHttpClient, GithubHttpClient>();
+                    services.AddTransient<IIssuesEncryptor, AesIssuesEncryptor>();
+                    services.AddTransient<IEncryptionKeyProvider, MockEncryptionKeyProvider>();
+                    services.AddTransient<IBackupManager, BackupManager>();
+                    services.AddTransient<IIssueService, IssueService>();
+                    services.AddTransient<IBackupRepository, BackupRepository>();
                 })
                 .Build();
         }

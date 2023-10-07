@@ -1,9 +1,9 @@
-﻿namespace GithubBackupTool.Infractructure.Interfaces
+﻿namespace GithubBackupTool.Models.Repositories
 {
     public interface IBackupRepository
     {
-        public void SaveBackupToFile(object value);
+        public void SaveBackupToFile(Repository repository, byte[] value);
         public void CreateBackupRecord(string repositoryName);
-        public object ReadBackupFromFile();
+        public byte[] ReadBackupFromFile();
     }
 }

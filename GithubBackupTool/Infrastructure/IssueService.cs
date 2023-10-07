@@ -2,32 +2,38 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using GithubBackupTool.Infrastructure;
+using GithubBackupTool.Infrastructure.Interfaces;
 using GithubBackupTool.Models;
 using GithubBackupTool.Models.Repositories;
+using Newtonsoft.Json;
 
 namespace GithubBackupTool.Infractructure
 {
     public class IssueService : IIssueService
     {
-        private readonly HttpClient _httpClient = new GithubHttpClient().Client;
+        private readonly HttpClient _httpClient;
+
+        public IssueService(IGithubHttpClient githubHttpClient)
+        {
+            _httpClient = githubHttpClient.Client;
+        }
 
         public async Task<IEnumerable<Issue>> GetIssues(Repository repository)
         {
-            throw new NotImplementedException();
-            var httpUrl = $"repos/{repository.Owner.Login}/{repository.Name}/issues";
+            var httpUrl = $"/repos/{repository.Owner.Login}/{repository.Name}/issues";
+            IEnumerable<Issue> result;
 
-            HttpResponseMessage response = await _httpClient.GetAsync(httpUrl);
+            HttpResponseMessage response = await _httpClient.GetAsync(httpUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
-                //json convertion etc
-
+                var rawResponse = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<IEnumerable<Issue>>(rawResponse)!;
             }
             else
             {
-                throw new Exception("Fail");
+                throw new Exception(response.StatusCode.ToString());
             }
-            return (IEnumerable<Issue>)response.Content;
+            return result;
         }
 
         public async Task PostIssues(Repository repository, IEnumerable<Issue> issues)

@@ -1,17 +1,18 @@
-﻿using GithubBackupTool.Infractructure.Interfaces;
-using GithubBackupTool.Infrastructure.Interfaces;
+﻿using GithubBackupTool.Infrastructure.Interfaces;
+using GithubBackupTool.Models.Interfaces;
 using GithubBackupTool.Models.Repositories;
+using System.Threading.Tasks;
 
 namespace GithubBackupTool.Models
 {
-    public class BackupManager
+    public class BackupManager : IBackupManager
     {
         private readonly IRepositoryService _repositoryService;
         private readonly IIssueService _issueService;
         private readonly IBackupRepository _backupRepository;
-        private readonly IEncryptor _encryptor;
+        private readonly IIssuesEncryptor _encryptor;
 
-        public BackupManager(IRepositoryService repositoryService, IIssueService issueService, IBackupRepository backupRepository, IEncryptor encryptor)
+        public BackupManager(IRepositoryService repositoryService, IIssueService issueService, IBackupRepository backupRepository, IIssuesEncryptor encryptor)
         {
             _repositoryService = repositoryService;
             _issueService = issueService;
@@ -19,18 +20,21 @@ namespace GithubBackupTool.Models
             _encryptor = encryptor;
         }
 
-        public void CreateBackup(Repository repository)
+        public async Task CreateBackup(Repository repository)
         {
-            var issues = _issueService.GetIssues(repository);
+            var issues = await _issueService.GetIssues(repository);
             var encryptedIssues = _encryptor.Encrypt(issues);
-            _backupRepository.SaveBackupToFile(encryptedIssues);
+            _backupRepository.SaveBackupToFile(repository, encryptedIssues);
             _backupRepository.CreateBackupRecord(repository.Name);
         }
 
-        public void RestoreBackup()
+        public async void RestoreBackup(Repository repository)
         {
-            
+            await _repositoryService.CreateRepository(repository.Name);
 
+            var encryptedIssues = _backupRepository.ReadBackupFromFile();
+            var issues = _encryptor.Decrypt(encryptedIssues);
+            await _issueService.PostIssues(repository, issues);
         }
     }
 }

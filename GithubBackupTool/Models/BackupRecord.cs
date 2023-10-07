@@ -6,7 +6,5 @@ namespace GithubBackupTool.Models
     {
         public string RepositoryName { get; set; }
         public DateTime BackupUTC { get; set; }
-
-        //filepath?
     }
 }

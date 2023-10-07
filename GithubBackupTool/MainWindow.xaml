@@ -21,8 +21,14 @@
         <TextBox x:Name="ErrorTextBox" IsReadOnly="True" Foreground="Red" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ></TextBox>
         
         <Label x:Name="BearerLabl" Grid.Row="0" Grid.Column="2" >Bearer token: </Label>
-        <TextBox x:Name="BearerTextBox" Grid.Row="1" Grid.Column="2" TextChanged="BearerTextBox_TextChanged">Placeholder</TextBox>
+        <TextBox x:Name="BearerTextBox" Grid.Row="1" Grid.Column="2" TextChanged="BearerTextBox_TextChanged"></TextBox>
         
-        <ListView x:Name="RepositoriesView" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0"></ListView>
+        <ListView x:Name="RepositoriesView" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Window>
