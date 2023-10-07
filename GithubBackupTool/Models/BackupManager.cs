@@ -20,7 +20,7 @@ namespace GithubBackupTool.Models
             _encryptor = encryptor;
         }
 
-        public async Task CreateBackup(Repository repository)
+        public async void CreateBackup(Repository repository)
         {
             var issues = await _issueService.GetIssues(repository);
             var encryptedIssues = _encryptor.Encrypt(issues);
