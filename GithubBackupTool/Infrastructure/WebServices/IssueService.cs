@@ -14,10 +14,12 @@ namespace GithubBackupTool.Infrastructure.WebServices
     public class IssueService : IIssueService
     {
         private readonly HttpClient _httpClient;
+        private readonly IUserService _userService;
 
-        public IssueService(IGithubHttpClient githubHttpClient)
+        public IssueService(IGithubHttpClient githubHttpClient, IUserService userService)
         {
             _httpClient = githubHttpClient.Client;
+            _userService = userService;
         }
 
         public async Task<IEnumerable<Issue>> GetIssues(Repository repository)
@@ -40,9 +42,10 @@ namespace GithubBackupTool.Infrastructure.WebServices
 
         public async Task PostIssues(string repository, IEnumerable<Issue> issues)
         {
+            var authenticatedUser = await _userService.GetAuthenticatedUser();
             foreach (var issue in issues)
             {
-                var httpUrl = $"/repos/{issue.User.Login}/{repository}/issues";
+                var httpUrl = $"/repos/{authenticatedUser.Login}/{repository}/issues";
 
                 var jsonContent = JsonConvert.SerializeObject(new { title = issue.Title, body = issue.Body });
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");

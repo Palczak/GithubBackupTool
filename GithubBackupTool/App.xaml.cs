@@ -27,6 +27,7 @@ namespace GithubBackupTool
                     services.AddTransient<IEncryptionKeyProvider, MockEncryptionKeyProvider>();
                     services.AddTransient<IBackupManager, BackupManager>();
                     services.AddTransient<IIssueService, IssueService>();
+                    services.AddTransient<IUserService, UserService>();
                     services.AddTransient<IBackupRepository, BackupRepository>();
                     services.AddTransient<BackupContext>();
                 })
