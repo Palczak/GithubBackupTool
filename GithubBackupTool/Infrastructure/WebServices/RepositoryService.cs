@@ -25,7 +25,7 @@ namespace GithubBackupTool.Infrastructure.WebServices
         {
             var httpUrl = "/user/repos";
 
-            var jsonContent = JsonConvert.SerializeObject(new { name = repositoryName });
+            var jsonContent = JsonConvert.SerializeObject(new { name = repositoryName, @private = true });
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await _httpClient.PostAsync(httpUrl, content).ConfigureAwait(false);
