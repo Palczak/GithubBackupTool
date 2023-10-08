@@ -7,6 +7,6 @@ namespace GithubBackupTool.Models.Interfaces
     {
         public Task CreateBackup(Repository repository);
 
-        public void RestoreBackup(Backup repository);
+        public Task RestoreBackup(Backup repository);
     }
 }

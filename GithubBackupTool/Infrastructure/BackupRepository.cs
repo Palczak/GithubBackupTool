@@ -39,17 +39,23 @@ namespace GithubBackupTool.Infractructure
 
         public byte[] ReadBackupFromFile(Backup backup)
         {
-            var backupFileName = $"{backup.RepositoryName}-{backup.BackupUTC}.bin".Replace(":", ".");
+            var backupFilePath = GenerateBackupFilePathAndName(backup.RepositoryName, backup.BackupUTC);
 
-            return File.ReadAllBytes(Path.Combine(BackupDirectory, backupFileName));
+            return File.ReadAllBytes(backupFilePath);
         }
 
-        public async void SaveBackupToFile(Repository repository, byte[] value, DateTime backupCreationTime)
+        public void SaveBackupToFile(Repository repository, byte[] value, DateTime backupCreationTime)
         {
             EnsureBackupFolderExist();
-            var backupFileName = $"{repository.Name}-{backupCreationTime}.bin".Replace(":", ".");
+            var backupFilePath = GenerateBackupFilePathAndName(repository.Name, backupCreationTime);
 
-            File.WriteAllBytes(Path.Combine(BackupDirectory, backupFileName), value);
+            File.WriteAllBytes(backupFilePath, value);
+        }
+
+        private string GenerateBackupFilePathAndName(string repositoryName, DateTime backupCreationTime)
+        {
+            var backupFileName = $"{repositoryName}-{backupCreationTime}.bin".Replace(":", ".");
+            return Path.Combine(BackupDirectory, backupFileName);
         }
 
         private void EnsureBackupFolderExist()

@@ -55,12 +55,6 @@ namespace GithubBackupTool
             _githubHttpClient.Bearer = ((TextBox)sender).Text;
         }
 
-        private void ClearErrorMessage()
-        {
-            MessageTextBox.Text = "";
-            MessageTextBox.Foreground = Brushes.DarkRed;
-        }
-
         private async void RepositoryItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             try
@@ -78,7 +72,7 @@ namespace GithubBackupTool
             }
         }
 
-        private void BackupItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void BackupItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             try
             {
@@ -86,7 +80,7 @@ namespace GithubBackupTool
                 var textBlock = (TextBlock)castedSender.Children[0];
                 var backup = (Backup)textBlock.DataContext;
 
-                _backupManager.RestoreBackup(backup);
+                await _backupManager.RestoreBackup(backup);
                 MessageTextBox.Text = "Backup restored successfully";
                 MessageTextBox.Foreground = Brushes.DarkGreen;
             }
@@ -105,6 +99,12 @@ namespace GithubBackupTool
         {
             _backups = _backupRepository.GetLatestBackups();
             BackupsView.ItemsSource = _backups;
+        }
+
+        private void ClearErrorMessage()
+        {
+            MessageTextBox.Text = "";
+            MessageTextBox.Foreground = Brushes.DarkRed;
         }
     }
 }

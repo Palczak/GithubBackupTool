@@ -31,7 +31,7 @@ namespace GithubBackupTool.Models
             _backupRepository.CreateBackupRecord(repository.Name, backupCreationTime);
         }
 
-        public async void RestoreBackup(Backup backup)
+        public async Task RestoreBackup(Backup backup)
         {
             await _repositoryService.CreateRepository(backup.RepositoryName + backup.Id);
             var encryptedIssues = _backupRepository.ReadBackupFromFile(backup);
