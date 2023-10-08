@@ -37,7 +37,7 @@ namespace GithubBackupTool.Infrastructure.WebServices
 
         public async Task<IEnumerable<Repository>> GetRepositories()
         {
-            var httpUrl = "/user/repos";
+            var httpUrl = "/user/repos?type=private&per_page=100";
             IEnumerable<Repository> result;
 
             HttpResponseMessage response = await _httpClient.GetAsync(httpUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);

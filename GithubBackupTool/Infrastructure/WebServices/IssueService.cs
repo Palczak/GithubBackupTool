@@ -24,7 +24,7 @@ namespace GithubBackupTool.Infrastructure.WebServices
 
         public async Task<IEnumerable<Issue>> GetIssues(Repository repository)
         {
-            var httpUrl = $"/repos/{repository.Owner.Login}/{repository.Name}/issues?state=all";
+            var httpUrl = $"/repos/{repository.Owner.Login}/{repository.Name}/issues?state=all&per_page=100";
             IEnumerable<Issue> result;
 
             HttpResponseMessage response = await _httpClient.GetAsync(httpUrl, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);

@@ -54,7 +54,7 @@ namespace GithubBackupTool.Infractructure
 
         private string GenerateBackupFilePathAndName(string repositoryName, DateTime backupCreationTime)
         {
-            var backupFileName = $"{repositoryName}-{backupCreationTime}.bin".Replace(":", ".");
+            var backupFileName = $"{repositoryName}-{backupCreationTime}".Replace(":", ".");
             return Path.Combine(BackupDirectory, backupFileName);
         }
 
