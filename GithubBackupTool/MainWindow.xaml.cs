@@ -5,9 +5,9 @@ using GithubBackupTool.Models.Interfaces;
 using GithubBackupTool.Models.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace GithubBackupTool
 {
@@ -19,14 +19,19 @@ namespace GithubBackupTool
         private readonly IRepositoryService _repositoryService;
         private readonly IGithubHttpClient _githubHttpClient;
         private readonly IBackupManager _backupManager;
+        private readonly IBackupRepository _backupRepository;
 
         private IEnumerable<Repository> _repositories = new List<Repository>();
+        private IEnumerable<Backup> _backups = new List<Backup>();
 
-        public MainWindow(IRepositoryService repositoryService, IGithubHttpClient githubHttpClient, IBackupManager backupManager)
+        public MainWindow(IRepositoryService repositoryService, IGithubHttpClient githubHttpClient, IBackupManager backupManager, IBackupRepository backupRepository)
         {
             _repositoryService = repositoryService;
             _githubHttpClient = githubHttpClient;
             _backupManager = backupManager;
+            _backupRepository = backupRepository;
+
+            BackupContext.EnsureTableExist();
 
             InitializeComponent();
         }
@@ -41,7 +46,7 @@ namespace GithubBackupTool
             }
             catch (Exception ex)
             {
-                ErrorTextBox.Text = ex.Message;
+                MessageTextBox.Text = ex.Message;
             }
         }
 
@@ -52,19 +57,54 @@ namespace GithubBackupTool
 
         private void ClearErrorMessage()
         {
-            ErrorTextBox.Text = "";
+            MessageTextBox.Text = "";
+            MessageTextBox.Foreground = Brushes.DarkRed;
         }
 
-        private void TextBlock_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void RepositoryItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             try
             {
-                _backupManager.CreateBackup(_repositories.First());
+                var castedSender = (TextBlock)sender;
+                var repository = (Repository)castedSender.DataContext;
+
+                await _backupManager.CreateBackup(repository);
+
+                RefreshBackups();
             }
             catch (Exception ex)
             {
-                ErrorTextBox.Text = ex.Message;
+                MessageTextBox.Text = ex.Message;
             }
+        }
+
+        private void BackupItem_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                var castedSender = (StackPanel)sender;
+                var textBlock = (TextBlock)castedSender.Children[0];
+                var backup = (Backup)textBlock.DataContext;
+
+                _backupManager.RestoreBackup(backup);
+                MessageTextBox.Text = "Backup restored successfully";
+                MessageTextBox.Foreground = Brushes.DarkGreen;
+            }
+            catch (Exception ex)
+            {
+                MessageTextBox.Text = ex.Message;
+            }
+        }
+
+        private void BackupsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            RefreshBackups();
+        }
+
+        private void RefreshBackups()
+        {
+            _backups = _backupRepository.GetLatestBackups();
+            BackupsView.ItemsSource = _backups;
         }
     }
 }

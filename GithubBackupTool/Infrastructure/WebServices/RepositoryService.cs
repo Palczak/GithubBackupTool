@@ -4,7 +4,9 @@ using GithubBackupTool.Models.Repositories;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GithubBackupTool.Infrastructure.WebServices
@@ -19,9 +21,18 @@ namespace GithubBackupTool.Infrastructure.WebServices
         }
 
 
-        public async Task CreateRepository(string name)
+        public async Task CreateRepository(string repositoryName)
         {
-            throw new NotImplementedException();
+            var httpUrl = "/user/repos";
+
+            var jsonContent = JsonConvert.SerializeObject(new { name = repositoryName });
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PostAsync(httpUrl, content).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(response.StatusCode.ToString());
+            }
         }
 
         public async Task<IEnumerable<Repository>> GetRepositories()
@@ -39,7 +50,7 @@ namespace GithubBackupTool.Infrastructure.WebServices
             {
                 throw new Exception(response.StatusCode.ToString());
             }
-            return result;
+            return result.OrderBy(x => x.Name);
         }
     }
 }

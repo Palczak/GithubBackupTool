@@ -18,7 +18,7 @@ namespace GithubBackupTool.Infrastructure
 
         public IEnumerable<Issue> Decrypt(byte[] encryptedValue)
         {
-            string plaintext = null;
+            string plaintext;
             using (Aes aes = Aes.Create())
             {
                 aes.IV = _encryptionKeyProvider.IV;

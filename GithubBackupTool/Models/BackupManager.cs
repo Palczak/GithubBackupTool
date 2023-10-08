@@ -1,6 +1,8 @@
 ﻿using GithubBackupTool.Infrastructure.Interfaces;
 using GithubBackupTool.Models.Interfaces;
 using GithubBackupTool.Models.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace GithubBackupTool.Models
 {
@@ -19,21 +21,23 @@ namespace GithubBackupTool.Models
             _encryptor = encryptor;
         }
 
-        public async void CreateBackup(Repository repository)
+        public async Task CreateBackup(Repository repository)
         {
             var issues = await _issueService.GetIssues(repository);
+
+            var backupCreationTime = DateTime.UtcNow;
             var encryptedIssues = _encryptor.Encrypt(issues);
-            _backupRepository.SaveBackupToFile(repository, encryptedIssues);
-            _backupRepository.CreateBackupRecord(repository.Name);
+            _backupRepository.SaveBackupToFile(repository, encryptedIssues, backupCreationTime);
+            _backupRepository.CreateBackupRecord(repository.Name, backupCreationTime);
         }
 
-        public async void RestoreBackup(Repository repository)
+        public async void RestoreBackup(Backup backup)
         {
-            await _repositoryService.CreateRepository(repository.Name);
-
-            var encryptedIssues = _backupRepository.ReadBackupFromFile();
+            await _repositoryService.CreateRepository(backup.RepositoryName + backup.Id);
+            var encryptedIssues = _backupRepository.ReadBackupFromFile(backup);
             var issues = _encryptor.Decrypt(encryptedIssues);
-            await _issueService.PostIssues(repository, issues);
+
+            await _issueService.PostIssues(backup.RepositoryName+backup.Id, issues);
         }
     }
 }

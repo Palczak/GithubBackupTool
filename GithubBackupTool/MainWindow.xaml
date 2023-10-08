@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -15,18 +14,33 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Button x:Name="RefreshRepositories" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Click="RefreshRepositories_Click">Refresh repositories</Button>
-        <TextBox x:Name="ErrorTextBox" IsReadOnly="True" Foreground="Red" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ></TextBox>
-        
-        <Label x:Name="BearerLabl" Grid.Row="0" Grid.Column="2" >Bearer token: </Label>
+        <TextBox x:Name="MessageTextBox" TextWrapping="Wrap" IsReadOnly="True" Foreground="DarkRed" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ></TextBox>
+
+        <Label Grid.Row="0" Grid.Column="2" >Bearer token:</Label>
         <TextBox x:Name="BearerTextBox" Grid.Row="1" Grid.Column="2" TextChanged="BearerTextBox_TextChanged"></TextBox>
-        
-        <ListView x:Name="RepositoriesView" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0">
+
+        <Label Grid.Row="2" Grid.Column="0" >Repositories</Label>
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" >Saved backups</Label>
+
+        <ListView x:Name="RepositoriesView" Grid.Row="3"  Grid.Column="0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp"></TextBlock>
+                    <TextBlock Text="{Binding Name}" MouseLeftButtonUp="RepositoryItem_MouseLeftButtonUp"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ListView x:Name="BackupsView" Grid.Row="3" Grid.Column="1" Loaded="BackupsView_Loaded" Grid.ColumnSpan="2">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" MouseLeftButtonUp="BackupItem_MouseLeftButtonUp">
+                        <TextBlock Text="{Binding RepositoryName}"></TextBlock>
+                        <TextBlock Text="{Binding BackupUTC}"></TextBlock>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
